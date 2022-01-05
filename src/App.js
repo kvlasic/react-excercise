@@ -3,27 +3,30 @@ import NewsList from "./NewsList";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import SpinnerAnimation from "./SpinnerAnimation";
+import Pagination from "./Pagination";
 
 function App() {
   const [news, setNews] = useState([]);
   const [searchInput, setSearchInput] = useState("");
   const [previousSearchInput, setPreviousSearchInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [nbOfPages, setNbOfPages] = useState(0);
 
   const downloadNews = async () => {
     setPreviousSearchInput(searchInput);
     try {
       setLoading(true);
-      const data = await axios
-        .get(
-          `http://hn.algolia.com/api/v1/search?query=${searchInput}&hitsPerPage=30`
-        )
-        .then((res) => setNews(res.data.hits));
+      const res = await axios.get(
+        `http://hn.algolia.com/api/v1/search?query=${searchInput}&hitsPerPage=30&page=${currentPage}`
+      );
+      setNews(res.data.hits);
+      setCurrentPage(res.data.page);
+      setNbOfPages(res.data.nbPages);
       setLoading(false);
     } catch (e) {
       console.log(e);
     }
-    console.log(news);
   };
 
   const handleSearch = (event) => {
@@ -49,6 +52,7 @@ function App() {
       </form>
       {loading ? <SpinnerAnimation /> : ""}
       <NewsList news={news} />
+      <Pagination page={currentPage} callback={setCurrentPage} />
     </div>
   );
 }

@@ -1,9 +1,10 @@
-import { React, useState, useEffect } from "react";
+import { React, useState } from "react";
 import NewsList from "./NewsList";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import SpinnerAnimation from "./SpinnerAnimation";
 import Pagination from "./Pagination";
+import "./style.css";
 
 function App() {
   const [news, setNews] = useState([]);
@@ -18,12 +19,12 @@ function App() {
     try {
       setLoading(true);
       const res = await axios.get(
-        `http://hn.algolia.com/api/v1/search?query=${searchInput}&hitsPerPage=30&page=${currentPage}`
+        `http://hn.algolia.com/api/v1/search?query=${searchInput}&tags=story&page=${currentPage}&hitsPerPage=20`
       );
       setNews(res.data.hits);
-      setCurrentPage(res.data.page);
       setNbOfPages(res.data.nbPages);
       setLoading(false);
+      console.log(res.data);
     } catch (e) {
       console.log(e);
     }
@@ -34,25 +35,39 @@ function App() {
     if (searchInput === previousSearchInput) return;
     downloadNews();
     setSearchInput("");
+    setCurrentPage(0);
   };
 
   // useEffect not needed since handleSearch is calling the downloadNews function when form is submited
   // useEffect(() => downloadNews(), []);
 
+  const changePage = (page) => {
+    setCurrentPage(page);
+    downloadNews();
+  };
+
   return (
     <div className="App">
-      {/* Search Form */}
-      <form onSubmit={handleSearch}>
-        <input
-          type="text"
-          placeholder="Search"
-          onChange={(event) => setSearchInput(event.target.value)}
-          value={searchInput}
-        ></input>
-      </form>
-      {loading ? <SpinnerAnimation /> : ""}
+      {/* Search Form / Spinner when loading*/}
+      {loading ? (
+        <div className="spinner-column">
+          <SpinnerAnimation />
+        </div>
+      ) : (
+        <>
+          <form onSubmit={handleSearch} className="form-control">
+            <input
+              type="text"
+              placeholder="Search"
+              onChange={(event) => setSearchInput(event.target.value)}
+              value={searchInput}
+            ></input>
+          </form>
+        </>
+      )}
+
       <NewsList news={news} />
-      <Pagination page={currentPage} callback={setCurrentPage} />
+      <Pagination page={currentPage} nextPage={changePage} />
     </div>
   );
 }

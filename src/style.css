@@ -1,0 +1,6 @@
+.spinner-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 44px;
+}

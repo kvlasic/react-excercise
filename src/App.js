@@ -12,7 +12,6 @@ function App() {
   const [previousSearchInput, setPreviousSearchInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
-  const [nbOfPages, setNbOfPages] = useState(0);
 
   const downloadNews = async () => {
     setPreviousSearchInput(searchInput);
@@ -22,7 +21,6 @@ function App() {
         `http://hn.algolia.com/api/v1/search?query=${searchInput}&tags=story&page=${currentPage}&hitsPerPage=20`
       );
       setNews(res.data.hits);
-      setNbOfPages(res.data.nbPages);
       setLoading(false);
       console.log(res.data);
     } catch (e) {

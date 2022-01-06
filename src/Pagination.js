@@ -5,14 +5,12 @@ export default function Pagination({ page, nextPage }) {
     <div>
       <ul class="pagination">
         <li class="page-item">
-          <a class="page-link" href="#">
-            Page: {page + 1}
-          </a>
+          <p class="page-link">Page: {page + 1}</p>
         </li>
         <li class="page-item">
-          <a class="page-link" href="#" onClick={() => nextPage(page + 1)}>
+          <p class="page-link" onClick={() => nextPage(page + 1)}>
             Next Page
-          </a>
+          </p>
         </li>
       </ul>
     </div>

@@ -18,7 +18,7 @@ function App() {
     try {
       setLoading(true);
       const res = await axios.get(
-        `http://hn.algolia.com/api/v1/search?query=${searchInput}&tags=story&page=${currentPage}&hitsPerPage=20`
+        `https://hn.algolia.com/api/v1/search?query=${searchInput}&tags=story&page=${currentPage}&hitsPerPage=20`
       );
       setNews(res.data.hits);
       setLoading(false);
